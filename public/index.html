@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automotive Hub — shadcn/ui</title>
+  
+  <!-- Inter Font from Google Fonts (standard shadcn font) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons via unpkg -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%3E%3Ctext y=%2226%22 font-size=%2228%22>🏎️</text></svg>">
+</head>
+<body>
+
+  <!-- ================= SITE HEADER (SHADCN HEADER) ================= -->
+  <header class="site-header">
+    <div class="container header-container">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <a href="#" class="brand">
+          <div class="brand-icon">
+            <i data-lucide="car" style="width: 1.125rem; height: 1.125rem;"></i>
+          </div>
+          <span class="brand-title">Velocity Hub</span>
+        </a>
+        <span class="brand-badge">shadcn/ui</span>
+      </div>
+
+      <!-- User Switcher & Actions -->
+      <div class="header-actions">
+        <!-- User Switcher -->
+        <div class="user-switcher">
+          <div class="avatar" id="navAvatar">U</div>
+          <select id="userSelector">
+            <option value="">Loading users...</option>
+          </select>
+        </div>
+
+        <button class="btn btn-outline btn-sm" id="btnOpenUserModal">
+          <i data-lucide="user-plus" style="width: 0.875rem; height: 0.875rem;"></i>
+          <span>New User</span>
+        </button>
+
+        <button class="btn btn-secondary btn-sm" id="btnOpenSeedModal">
+          <i data-lucide="sparkles" style="width: 0.875rem; height: 0.875rem;"></i>
+          <span>Seed Demo</span>
+        </button>
+
+        <button class="btn btn-primary btn-sm" id="btnOpenCarModal">
+          <i data-lucide="plus" style="width: 0.875rem; height: 0.875rem;"></i>
+          <span>Add Car</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTAINER ================= -->
+  <main class="container">
+    
+    <!-- Page Intro Header -->
+    <div class="page-header">
+      <div class="page-header-top">
+        <div>
+          <h1 class="page-title">Showroom & Relationships</h1>
+          <p class="page-description">
+            Interactive inventory platform demonstrating Mongoose data associations: 
+            <strong>1-M</strong> (Sections to Cars), <strong>1-1</strong> (User Single Booking), and <strong>M-M</strong> (Favorites Junction).
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-outline btn-sm" id="btnOpenSectionModal">
+            <i data-lucide="folder-plus" style="width: 0.875rem; height: 0.875rem;"></i>
+            <span>Add Section</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Relationship Summary Cards -->
+    <div class="stats-grid">
+      <!-- 1-M Stat Card -->
+      <div class="stat-card" id="cardStat1M">
+        <div class="stat-icon">
+          <i data-lucide="layers" style="width: 1.125rem; height: 1.125rem;"></i>
+        </div>
+        <div class="stat-details">
+          <span class="stat-name">1-M Relationship</span>
+          <span class="stat-value" id="statCarsCount">0</span>
+          <span class="stat-desc">Cars distributed across Sections</span>
+        </div>
+      </div>
+
+      <!-- 1-1 Stat Card -->
+      <div class="stat-card" id="cardStat11">
+        <div class="stat-icon">
+          <i data-lucide="key" style="width: 1.125rem; height: 1.125rem;"></i>
+        </div>
+        <div class="stat-details">
+          <span class="stat-name">1-1 Relationship</span>
+          <span class="stat-value" id="statBookingState">No Booking</span>
+          <span class="stat-desc">User holds at most 1 active booking</span>
+        </div>
+      </div>
+
+      <!-- M-M Stat Card -->
+      <div class="stat-card" id="cardStatMM">
+        <div class="stat-icon">
+          <i data-lucide="heart" style="width: 1.125rem; height: 1.125rem;"></i>
+        </div>
+        <div class="stat-details">
+          <span class="stat-name">M-M Relationship</span>
+          <span class="stat-value" id="statFavoritesCount">0</span>
+          <span class="stat-desc">Favorites via Junction Model</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TABS ================= -->
+    <div class="tabs">
+      <div class="tabs-list">
+        <button class="tabs-trigger active" data-tab="carsTab" id="tabCarsBtn">
+          <i data-lucide="car" style="width: 0.875rem; height: 0.875rem;"></i>
+          <span>Inventory</span>
+          <span class="count-pill" id="badgeCarsCount">0</span>
+        </button>
+
+        <button class="tabs-trigger" data-tab="sectionsTab" id="tabSectionsBtn">
+          <i data-lucide="layers" style="width: 0.875rem; height: 0.875rem;"></i>
+          <span>Sections (1-M)</span>
+          <span class="count-pill" id="badgeSectionsCount">0</span>
+        </button>
+
+        <button class="tabs-trigger" data-tab="bookingTab" id="tabBookingBtn">
+          <i data-lucide="key" style="width: 0.875rem; height: 0.875rem;"></i>
+          <span>Booking (1-1)</span>
+          <span class="count-pill" id="badgeBookingCount">0</span>
+        </button>
+
+        <button class="tabs-trigger" data-tab="favoritesTab" id="tabFavoritesBtn">
+          <i data-lucide="heart" style="width: 0.875rem; height: 0.875rem;"></i>
+          <span>Favorites (M-M)</span>
+          <span class="count-pill" id="badgeFavoritesCount">0</span>
+        </button>
+
+        <button class="tabs-trigger" data-tab="consoleTab" id="tabConsoleBtn">
+          <i data-lucide="terminal" style="width: 0.875rem; height: 0.875rem;"></i>
+          <span>Network Inspector</span>
+          <span class="count-pill" id="badgeApiCallsCount">0</span>
+        </button>
+      </div>
+
+      <!-- ================= TAB CONTENT 1: CARS INVENTORY ================= -->
+      <div class="tabs-content active" id="carsTab">
+        <!-- Filter and Search Toolbar -->
+        <div class="toolbar">
+          <div class="filter-pills" id="sectionPillsContainer">
+            <button class="filter-pill active" data-section-id="ALL">All Sections</button>
+          </div>
+
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <div class="search-input-wrapper">
+              <i data-lucide="search" class="search-icon"></i>
+              <input type="text" class="input" id="carSearchInput" placeholder="Filter vehicles...">
+            </div>
+            <button class="btn btn-outline btn-icon" id="btnRefreshCars" title="Refresh Inventory">
+              <i data-lucide="rotate-cw" style="width: 0.875rem; height: 0.875rem;"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Grid of Car Cards -->
+        <div class="cars-grid" id="carsGrid">
+          <div class="empty-box">
+            <div class="empty-icon"><i data-lucide="loader-2"></i></div>
+            <div style="font-weight: 500;">Loading inventory...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TAB CONTENT 2: SECTIONS (1-M) ================= -->
+      <div class="tabs-content" id="sectionsTab">
+        <div style="margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.125rem; font-weight: 600; letter-spacing: -0.02em;">Category Sections</h3>
+          <p style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">
+            Click on any section to execute <code>GET /api/v1/sections/:sectionId/cars</code> and inspect the 1-M relationship.
+          </p>
+        </div>
+
+        <div class="sections-grid" id="sectionsGrid"></div>
+
+        <!-- Section Cars Inspector Card -->
+        <div class="section-cars-inspector" id="sectionDetailBox" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div>
+              <h4 id="detailSectionTitle" style="font-weight: 600; font-size: 1rem;">Section Details</h4>
+              <p id="detailSectionCount" style="font-size: 0.8125rem; color: hsl(var(--muted-foreground));">0 cars</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="btnCloseDetail">Close</button>
+          </div>
+          <div class="cars-grid" id="detailCarsList"></div>
+        </div>
+      </div>
+
+      <!-- ================= TAB CONTENT 3: BOOKINGS (1-1) ================= -->
+      <div class="tabs-content" id="bookingTab">
+        <div class="booking-layout">
+          <!-- User Profile Card -->
+          <div class="user-profile-card">
+            <div class="user-profile-header">
+              <div class="user-avatar-large" id="profileAvatar">U</div>
+              <div>
+                <h3 id="profileName" style="font-size: 1rem; font-weight: 600;">Loading User...</h3>
+                <span id="profileEmail" style="font-size: 0.8125rem; color: hsl(var(--muted-foreground));">-</span>
+              </div>
+            </div>
+
+            <div style="border-top: 1px solid hsl(var(--border)); padding-top: 0.75rem; display: flex; flex-direction: column; gap: 0.375rem; font-size: 0.8125rem;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: hsl(var(--muted-foreground));">Phone:</span>
+                <span id="profilePhone" style="font-weight: 500;">-</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="color: hsl(var(--muted-foreground));">ID:</span>
+                <code id="profileId" style="font-size: 0.75rem; background: hsl(var(--secondary)); padding: 0.125rem 0.375rem; border-radius: var(--radius);">-</code>
+              </div>
+            </div>
+
+            <button class="btn btn-outline btn-sm" id="btnSwitchUserPrompt" style="width: 100%; margin-top: 0.5rem;">
+              Switch User
+            </button>
+          </div>
+
+          <!-- Active Booking Details -->
+          <div class="booking-details-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+              <div>
+                <h3 style="font-size: 1.125rem; font-weight: 600; letter-spacing: -0.02em;">Single Car Reservation</h3>
+                <p style="font-size: 0.8125rem; color: hsl(var(--muted-foreground));">
+                  Enforces strict 1-1 constraints: 1 User books 1 Car, and 1 Car is held by 1 User.
+                </p>
+              </div>
+              <span class="badge badge-outline">1-to-1 Policy</span>
+            </div>
+
+            <div id="bookingSpotlight"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TAB CONTENT 4: FAVORITES (M-M) ================= -->
+      <div class="tabs-content" id="favoritesTab">
+        <div style="margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.125rem; font-weight: 600; letter-spacing: -0.02em;">Favorites Collection</h3>
+          <p style="font-size: 0.875rem; color: hsl(var(--muted-foreground));">
+            Populated from the <code>Favorite</code> junction model (<code>GET /api/v1/favorites/user/:userId</code>).
+          </p>
+        </div>
+
+        <div class="cars-grid" id="favoritesGrid"></div>
+      </div>
+
+      <!-- ================= TAB CONTENT 5: NETWORK INSPECTOR ================= -->
+      <div class="tabs-content" id="consoleTab">
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <div class="terminal-title">
+              <span class="status-dot"></span>
+              <span>REST API Network Stream</span>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="btnClearLogs" style="height: 1.5rem; font-size: 0.6875rem;">Clear Log</button>
+          </div>
+          <div class="terminal-body" id="consoleLogs">
+            <div class="log-row">
+              <span style="color: hsl(var(--muted-foreground));">00:00:00</span>
+              <span class="method-tag method-get">INIT</span>
+              <span style="flex-grow: 1;">REST Client ready on /api/v1</span>
+              <span style="color: hsl(142 76% 56%);">200 OK</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= DIALOGS / MODALS (SHADCN SPEC) ================= -->
+
+  <!-- Add Car Modal -->
+  <div class="dialog-overlay" id="carModal">
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h3 class="dialog-title">Create Vehicle</h3>
+        <p class="dialog-description">Add a new car and associate it with a section (1-M relationship).</p>
+      </div>
+      <button class="dialog-close" id="btnCloseCarModal"><i data-lucide="x" style="width: 1rem; height: 1rem;"></i></button>
+
+      <form id="createCarForm">
+        <div class="form-item">
+          <label class="form-label" for="carTitle">Car Title</label>
+          <input type="text" class="input" id="carTitle" required placeholder="e.g. Porsche 911 GT3 RS">
+        </div>
+        <div class="form-grid-2">
+          <div class="form-item">
+            <label class="form-label" for="carModel">Model Year</label>
+            <input type="text" class="input" id="carModel" required placeholder="e.g. 2024">
+          </div>
+          <div class="form-item">
+            <label class="form-label" for="carPrice">Price ($)</label>
+            <input type="number" class="input" id="carPrice" required placeholder="e.g. 241300">
+          </div>
+        </div>
+        <div class="form-item">
+          <label class="form-label" for="carSectionSelect">Section / Category (1-M)</label>
+          <select class="select" id="carSectionSelect" required>
+            <option value="">Select a category...</option>
+          </select>
+        </div>
+        <div class="form-item">
+          <label class="form-label" for="carColors">Colors (Comma-separated)</label>
+          <input type="text" class="input" id="carColors" placeholder="e.g. Guards Red, Shark Blue">
+        </div>
+        <div class="dialog-footer">
+          <button type="button" class="btn btn-outline" id="btnCancelCar">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmitCar">Save Vehicle</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Section Modal -->
+  <div class="dialog-overlay" id="sectionModal">
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h3 class="dialog-title">Create Category Section</h3>
+        <p class="dialog-description">Define a new category to group cars under the 1-M relationship.</p>
+      </div>
+      <button class="dialog-close" id="btnCloseSectionModal"><i data-lucide="x" style="width: 1rem; height: 1rem;"></i></button>
+
+      <form id="createSectionForm">
+        <div class="form-item">
+          <label class="form-label" for="sectionTitle">Title</label>
+          <input type="text" class="input" id="sectionTitle" required placeholder="e.g. Supercars, Luxury SUV">
+        </div>
+        <div class="dialog-footer">
+          <button type="button" class="btn btn-outline" id="btnCancelSection">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmitSection">Save Section</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add User Modal -->
+  <div class="dialog-overlay" id="userModal">
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h3 class="dialog-title">Create User Account</h3>
+        <p class="dialog-description">Add a user for testing single bookings (1-1) and favorites (M-M).</p>
+      </div>
+      <button class="dialog-close" id="btnCloseUserModal"><i data-lucide="x" style="width: 1rem; height: 1rem;"></i></button>
+
+      <form id="createUserForm">
+        <div class="form-item">
+          <label class="form-label" for="userName">Full Name</label>
+          <input type="text" class="input" id="userName" required placeholder="e.g. Alex Morgan">
+        </div>
+        <div class="form-item">
+          <label class="form-label" for="userEmail">Email</label>
+          <input type="email" class="input" id="userEmail" required placeholder="e.g. alex@velocity.io">
+        </div>
+        <div class="form-grid-2">
+          <div class="form-item">
+            <label class="form-label" for="userPhone">Phone</label>
+            <input type="text" class="input" id="userPhone" required placeholder="e.g. +971501234567">
+          </div>
+          <div class="form-item">
+            <label class="form-label" for="userPassword">Password</label>
+            <input type="password" class="input" id="userPassword" required placeholder="••••••••">
+          </div>
+        </div>
+        <div class="dialog-footer">
+          <button type="button" class="btn btn-outline" id="btnCancelUser">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmitUser">Create User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Seed Demo Modal -->
+  <div class="dialog-overlay" id="seedModal">
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h3 class="dialog-title">Seed Demo Data</h3>
+        <p class="dialog-description">Automatically generate sections, cars, and users to test all 5 APIs.</p>
+      </div>
+      <button class="dialog-close" id="btnCloseSeedModal"><i data-lucide="x" style="width: 1rem; height: 1rem;"></i></button>
+
+      <div style="font-size: 0.875rem; color: hsl(var(--muted-foreground)); margin-bottom: 1.5rem; line-height: 1.6;">
+        <p>This action will call the backend APIs to create:</p>
+        <ul style="margin: 0.5rem 0 0 1.25rem;">
+          <li><strong>3 Category Sections</strong> (Supercars, Luxury SUV, Electric GT)</li>
+          <li><strong>5 Vehicles</strong> linked to their sections (1-M)</li>
+          <li><strong>2 Test Users</strong> ready for 1-1 Bookings and M-M Favorites</li>
+        </ul>
+      </div>
+
+      <div class="dialog-footer">
+        <button type="button" class="btn btn-outline" id="btnCancelSeed">Cancel</button>
+        <button type="button" class="btn btn-primary" id="btnExecuteSeed">Generate Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sonner / Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

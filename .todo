@@ -1,0 +1,18 @@
+CARS STORE
+
+- sections (title)
+- cars (title, model, color, price)
+- users (name, email, phone, password)
+- favorites 
+
+1-M
+- section has many cars 
+- car belong to one section
+
+1-1
+- user can book one car
+- and car can booked by one user
+
+M-M
+- user have many cars in favorites
+- car can belong to many users as favorites
